@@ -57,14 +57,14 @@ export abstract class MaterialComponent<
   protected ripple?: MDCRipple | null;
   protected control?: Element;
 
-  public render(props): VNode {
+  public render(props): VNode<JSX.HTMLAttributes> {
     if (!this.classText) {
       this.classText = this.buildClassName(props);
     }
     // Fetch a VNode
-    const componentProps = props;
-    const userDefinedClasses =
-      componentProps.className || componentProps.class || '';
+    const componentProps = {...props};
+    const userDefinedClasses = props.className || props.class || '';
+
 
     // We delete class props and add them later in the final
     // step so every component does not need to handle user specified classes.
@@ -76,9 +76,9 @@ export abstract class MaterialComponent<
     }
 
     const element = this.materialDom(componentProps);
-    element.attributes = element.attributes || {};
+    element.props = element.props || {};
 
-    element.attributes.className = `${userDefinedClasses} ${this.getClassName(
+    element.props.className = `${userDefinedClasses} ${this.getClassName(
       element
     )}`
       .split(' ')
@@ -92,7 +92,7 @@ export abstract class MaterialComponent<
       if (prop in doNotRemoveProps) {
         return;
       }
-      delete element.attributes[prop];
+      delete element.props[prop];
     });
     return element;
   }
@@ -163,17 +163,17 @@ export abstract class MaterialComponent<
   }
 
   /** Returns the class name for element */
-  protected getClassName(element: VNode) {
+  protected getClassName(element: VNode<JSX.HTMLAttributes>) {
     if (!element) {
       return '';
     }
-    const attrs = (element.attributes = element.attributes || {});
+    const props = (element.props = element.props || {});
     let classText = this.classText;
-    if (attrs.class) {
-      classText += ' ' + attrs.class;
+    if (props.class) {
+      classText += ' ' + props.class;
     }
-    if (attrs.className && attrs.className !== attrs.class) {
-      classText += ' ' + attrs.className;
+    if (props.className && props.className !== props.class) {
+      classText += ' ' + props.className;
     }
     return classText;
   }
@@ -181,7 +181,7 @@ export abstract class MaterialComponent<
   /** Components must implement this method for their specific DOM structure */
   protected abstract materialDom(
     props: MaterialComponentProps<PropType>
-  ): VNode;
+  ): VNode<JSX.HTMLAttributes>;
 }
 
 export default MaterialComponent;

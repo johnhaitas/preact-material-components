@@ -1,9 +1,9 @@
 // Dependencies
-import {h} from 'preact';
+import {h, toChildArray} from 'preact';
 
 // Class
 export default ({children, ...props}) => {
-  let child = children && children[0];
+  let child = children && toChildArray(children)[0];
   let orgDocUrl = `https://material.io/develop/web/components/${props.link}`;
 
   return (

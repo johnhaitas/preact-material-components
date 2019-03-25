@@ -1,5 +1,5 @@
 // Dependencies
-import {h} from 'preact';
+import {h, toChildArray} from 'preact';
 import cx from 'classnames';
 import hljs from 'highlight.js/lib/highlight';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -15,13 +15,11 @@ Object.keys(LANGUAGES).forEach(key =>
 
 // Class
 export default ({children, ...props}) => {
-  let child = children && children[0],
-    isHighlight = child && child.nodeName === 'code';
+  let child = children && toChildArray(children)[0],
+    isHighlight = child && child.type === 'code';
   if (isHighlight) {
-    let text = child.children[0].replace(/(^\s+|\s+$)/g, ''),
-      lang = (child.attributes.class && child.attributes.class).match(
-        /lang-([a-z]+)/
-      )[1],
+    let text = toChildArray(child.props.children)[0].replace(/(^\s+|\s+$)/g, ''),
+      lang = (child.props.class && child.props.class).match(/lang-([a-z]+)/)[1],
       highlighted = hljs.highlightAuto(text, lang ? [lang] : null),
       hLang = highlighted.language;
     return (
