@@ -1,6 +1,6 @@
 import {h} from 'preact';
 import MaterialComponent from '../Base/MaterialComponent';
-import Button from '../Button';
+import {Button} from '../Button';
 import Icon from '../Icon';
 
 interface ICardActionsProps {
@@ -75,8 +75,20 @@ export class CardActionIcons extends MaterialComponent<
   }
 }
 
-export class CardActionButtons extends CardActionIcons {
+export interface ICardActionButtonsProps {}
+
+export interface ICardActionButtonsState {}
+
+export class CardActionButtons extends MaterialComponent<
+  ICardActionButtonsProps,
+  ICardActionButtonsState
+> {
   protected componentName = 'card__action-buttons';
+  protected mdcProps = [];
+
+  protected materialDom({children, ...props}) {
+    return <div {...props}>{children}</div>;
+  }
 }
 
 export class CardActionIcon extends Icon {
@@ -126,6 +138,7 @@ export class Card extends MaterialComponent<ICardProps, ICardState> {
 
 export default class extends Card {
   public static readonly Actions = CardActions;
+  public static readonly ActionButtons = CardActionButtons;
   public static readonly ActionButton = CardActionButton;
   public static readonly ActionIcons = CardActionIcons;
   public static readonly ActionIcon = CardActionIcon;
